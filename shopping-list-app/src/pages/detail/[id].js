@@ -8,17 +8,7 @@ import ManageMembers from "@/components/Detail/ManageMembers";
 export default function ShoppingListDetail() {
   const router = useRouter();
   const { id } = router.query;
-
-  const [filter, setFilter] = useState("all"); // "all", "completed", or "uncompleted"
-
-  function filterItemsInList() {
-    if (filter === "completed") {
-      return currentList.items.filter((item) => item.isCompleted);
-    } else if (filter === "uncompleted") {
-      return currentList.items.filter((item) => !item.isCompleted);
-    }
-    return currentList.items; // Všechny položky
-  }
+  const [filter, setFilter] = useState("all");
 
   const {
     currentUserId,
@@ -28,13 +18,16 @@ export default function ShoppingListDetail() {
     currentList,
     setCurrentList,
     deleteItemFromList,
+    loading,
+    error,
+    ready,
   } = useContext(ShoppingListContext);
 
   const [newTitle, setNewTitle] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (lists && lists.length > 0 && id) {
+    if (ready && lists && lists.length > 0 && id) {
       const list = lists.find((list) => list.id === parseInt(id));
       if (list) {
         setCurrentList(list);
@@ -43,11 +36,22 @@ export default function ShoppingListDetail() {
         setCurrentList(null);
       }
     }
-  }, [currentUserId, id, lists]);
+  }, [currentUserId, id, lists, ready]);
 
-  if (!currentUserId || !lists || !currentList) {
+  if (loading) {
+    console.log("Načítání dat...");
     return <p className="text-gray-500">Načítání dat...</p>;
   }
+
+  if (error) {
+    console.log(error);
+    return <p className="text-red-500">Chyba při načítání: {error}</p>;
+  }
+
+  if (!ready || !currentUserId || !lists || !currentList) {
+    return <p className="text-gray-500">Nemáte žádné seznamy.</p>;
+  }
+
   if (
     currentList.ownerId !== currentUserId &&
     !currentList.members.includes(currentUserId)
@@ -58,7 +62,9 @@ export default function ShoppingListDetail() {
       </p>
     );
   }
-
+  if (ready) {
+    console.log("Data jsou připravena.");
+  }
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -71,6 +77,15 @@ export default function ShoppingListDetail() {
   const handleDeleteItem = (itemId) => {
     deleteItemFromList(currentList.id, itemId);
   };
+
+  function filterItemsInList() {
+    if (filter === "completed") {
+      return currentList.items.filter((item) => item.isCompleted);
+    } else if (filter === "uncompleted") {
+      return currentList.items.filter((item) => !item.isCompleted);
+    }
+    return currentList.items;
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-4 bg-white shadow-lg rounded-lg">
