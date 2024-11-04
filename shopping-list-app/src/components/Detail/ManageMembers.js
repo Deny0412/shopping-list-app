@@ -44,7 +44,7 @@ export default function ManageMembers({ members }) {
                 onClick={() => handleRemoveMember(member.id)}
                 className="text-red-500 hover:text-red-700 font-medium"
               >
-                Remove
+                Odstranit
               </button>
             )}
           </li>
@@ -54,7 +54,7 @@ export default function ManageMembers({ members }) {
       <div className="mt-6">
         <AddMemberForm listId={currentList.id}>
           <span className="text-blue-500 hover:text-blue-700 font-medium">
-            Add member
+            Přidat člena
           </span>
         </AddMemberForm>
       </div>
