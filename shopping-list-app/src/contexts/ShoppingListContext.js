@@ -43,22 +43,6 @@ export default function ShoppingListProvider({ children }) {
       isArchived: false,
       members: [],
     },
-    {
-      id: 3,
-      title: "Nákupní seznam 3",
-      items: [],
-      ownerId: 1,
-      isArchived: false,
-      members: [],
-    },
-    {
-      id: 4,
-      title: "Nákupní seznam 4",
-      items: [],
-      ownerId: 1,
-      isArchived: true,
-      members: [],
-    },
   ]);
   const [currentList, setCurrentList] = useState(null);
   const [currentFilter, setCurrentFilter] = useState("active"); //active or archived
@@ -84,13 +68,6 @@ export default function ShoppingListProvider({ children }) {
       ...current,
       { ...newList, id: Date.now(), isArchived: false },
     ]);
-  }
-  function toggleArchiveStatus(listId) {
-    setLists((prevLists) =>
-      prevLists.map((list) =>
-        list.id === listId ? { ...list, isArchived: !list.isArchived } : list
-      )
-    );
   }
 
   function getListById(id) {
@@ -119,10 +96,7 @@ export default function ShoppingListProvider({ children }) {
   function filterLists() {
     //doplnit members
 
-    return lists.filter(
-      (list) =>
-        list.ownerId === currentUserId || list.members.includes(currentUserId)
-    );
+    return lists.filter((list) => list.ownerId === currentUserId);
   }
   function changeNameOfList(id, newName) {
     setLists((current) =>
@@ -174,24 +148,16 @@ export default function ShoppingListProvider({ children }) {
       )
     );
   }
-  // src/contexts/ShoppingListContext.js
-
-  function filterListsArchive(showArchived) {
-    const filterList = filterLists();
-    return filterList.filter((list) => !list.isArchived || showArchived);
-  }
 
   return (
     <ShoppingListContext.Provider
       value={{
-        toggleArchiveStatus,
         deleteItemFromList,
         addMemberToList,
         removeMemberFromList,
         addItemToList,
         changeNameOfList,
         updateStatusItem,
-        filterListsArchive,
         filterLists,
         userList,
         lists,
