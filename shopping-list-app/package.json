@@ -12,7 +12,7 @@
   "dependencies": {
     "@babel/eslint-plugin": "^7.25.9",
     "@eslint/config-array": "^0.19.0",
-    "@heroicons/react": "^2.1.5",
+    "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
     "babel-eslint": "^10.1.0",
     "glob": "^9.3.5",

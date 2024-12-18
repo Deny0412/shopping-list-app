@@ -2,11 +2,33 @@ import React, { useContext } from "react";
 import { ShoppingListContext } from "@/contexts/ShoppingListContext";
 import AddMemberForm from "./AddMemberForm";
 import { useRouter } from "next/router";
+import { useTheme } from "@/contexts/ThemeContext";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ManageMembers({ members }) {
   const { userList, removeMemberFromList, currentList, currentUserId } =
     useContext(ShoppingListContext);
+  const { theme } = useTheme();
+  const { language } = useLanguage();
   const router = useRouter();
+
+  // Překlady
+  const translations = {
+    cs: {
+      manageMembers: "Správa členů",
+      owner: "Vlastník",
+      remove: "Odstranit",
+      addMember: "Přidat člena",
+    },
+    en: {
+      manageMembers: "Manage Members",
+      owner: "Owner",
+      remove: "Remove",
+      addMember: "Add Member",
+    },
+  };
+
+  const t = translations[language];
 
   // Najdeme vlastníka seznamu
   const owner = userList.find((user) => user.id === currentList.ownerId);
@@ -21,13 +43,25 @@ export default function ManageMembers({ members }) {
   };
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <h1 className="text-xl font-bold mb-4 text-gray-800">Správa členů</h1>
+    <div
+      className={`p-4 rounded-lg shadow-md ${
+        theme === "dark"
+          ? "bg-gray-800 text-gray-200"
+          : "bg-white text-gray-800"
+      }`}
+    >
+      <h1 className="text-xl font-bold mb-4">{t.manageMembers}</h1>
 
       {/* Zobrazení vlastníka seznamu */}
       {owner && (
-        <div className="mb-4 p-3 bg-gray-200 rounded-lg">
-          <p className="text-gray-700 font-medium">Vlastník: {owner.name}</p>
+        <div
+          className={`mb-4 p-3 rounded-lg ${
+            theme === "dark" ? "bg-gray-700" : "bg-gray-200"
+          }`}
+        >
+          <p className="font-medium">
+            {t.owner}: {owner.name}
+          </p>
         </div>
       )}
 
@@ -35,16 +69,22 @@ export default function ManageMembers({ members }) {
         {listMembers.map((member) => (
           <li
             key={member.id}
-            className="flex justify-between items-center bg-gray-100 p-3 rounded-lg"
+            className={`flex justify-between items-center p-3 rounded-lg ${
+              theme === "dark" ? "bg-gray-700" : "bg-gray-100"
+            }`}
           >
-            <p className="text-gray-700 font-medium">{member.name}</p>
+            <p className="font-medium">{member.name}</p>
             {(member.id === currentUserId ||
               currentList.ownerId === currentUserId) && (
               <button
                 onClick={() => handleRemoveMember(member.id)}
-                className="text-red-500 hover:text-red-700 font-medium"
+                className={`font-medium ${
+                  theme === "dark"
+                    ? "text-red-400 hover:text-red-500"
+                    : "text-red-500 hover:text-red-700"
+                }`}
               >
-                Odstranit
+                {t.remove}
               </button>
             )}
           </li>
@@ -53,8 +93,14 @@ export default function ManageMembers({ members }) {
 
       <div className="mt-6">
         <AddMemberForm listId={currentList.id}>
-          <span className="text-blue-500 hover:text-blue-700 font-medium">
-            Přidat člena
+          <span
+            className={`font-medium ${
+              theme === "dark"
+                ? "text-blue-400 hover:text-blue-500"
+                : "text-blue-500 hover:text-blue-700"
+            }`}
+          >
+            {t.addMember}
           </span>
         </AddMemberForm>
       </div>

@@ -3,15 +3,18 @@ import ShoppingListProvider from "../contexts/ShoppingListContext"; // Default i
 import Layout from "../components/Layout";
 import "../globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 export default function MyApp({ Component, pageProps }) {
   return (
     <ThemeProvider>
-      <ShoppingListProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ShoppingListProvider>
+      <LanguageProvider>
+        <ShoppingListProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ShoppingListProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }
