@@ -27,11 +27,13 @@ export default function ShoppingListItem({ item }) {
       activate: "Aktivovat",
       archive: "Archivovat",
       delete: "Smazat",
+      itemCount: (count) => `${count} položky`,
     },
     en: {
       activate: "Activate",
       archive: "Archive",
       delete: "Delete",
+      itemCount: (count) => `${count} items`,
     },
   };
 
@@ -53,6 +55,9 @@ export default function ShoppingListItem({ item }) {
           }`}
         >
           {item.title}
+          <span className="ml-2 text-sm text-gray-500">
+            ({t.itemCount(item.items.length)})
+          </span>
         </div>
       </Link>
 
